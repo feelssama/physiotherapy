@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GS파워 | 테라피 관리 시스템</title>
+    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
+    <link href="[https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css](https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css)" rel="stylesheet">
+    <style>
+        :root {
+            --gs-blue: #003366;
+            --gs-orange: #FF6600;
+        }
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: #F5F5F7; /* Apple-like light gray */
+            color: #1D1D1F;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+        }
+        .btn-primary {
+            background-color: var(--gs-blue);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #002244;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 51, 102, 0.3);
+        }
+        .btn-accent {
+            background-color: var(--gs-orange);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .btn-accent:hover {
+            background-color: #E65C00;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 102, 0, 0.3);
+        }
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col items-center justify-center">
+
+    <div id="login-view" class="w-full max-w-sm fade-in">
+        <div class="glass-card p-10 flex flex-col items-center text-center">
+            <div class="w-16 h-16 bg-[#003366] text-white rounded-2xl flex items-center justify-center text-2xl font-black mb-6 shadow-lg">GS</div>
+            <h1 class="text-2xl font-bold mb-2">관리자 인증</h1>
+            <p class="text-sm text-gray-500 mb-8">근골격계 테라피 프로그램 관리 시스템</p>
+            
+            <input type="password" id="password-input" placeholder="비밀번호 입력" 
+                   class="w-full px-5 py-4 bg-gray-100 border-none rounded-xl focus:ring-2 focus:ring-[#FF6600] outline-none transition-all mb-4 text-center tracking-widest">
+            
+            <button onclick="login()" class="w-full btn-primary py-4 rounded-xl font-bold text-lg">시스템 접속</button>
+            <p id="error-msg" class="text-red-500 text-sm mt-4 hidden">비밀번호가 일치하지 않습니다.</p>
+        </div>
+    </div>
+
+    <div id="dashboard-view" class="hidden w-full max-w-6xl p-6 fade-in min-h-screen flex flex-col">
+        
+        <header class="flex justify-between items-center mb-10 py-4 border-b border-gray-200">
+            <div class="flex items-center gap-4">
+                <span class="text-2xl font-black text-[#003366] tracking-tighter">GS POWER</span>
+                <span class="text-gray-300 text-2xl">|</span>
+                <span class="text-xl font-semibold text-gray-700">테라피 프로그램 관리</span>
+            </div>
+            <button onclick="location.reload()" class="text-sm font-medium text-gray-500 hover:text-[#FF6600] transition-colors">로그아웃</button>
+        </header>
+
+        <div class="glass-card p-8 mb-8 flex flex-wrap gap-4 items-end justify-between">
+            <div class="flex-1 min-w-[200px]">
+                <label class="block text-sm font-bold text-gray-700 mb-2">사업소 선택</label>
+                <select id="new-loc" class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-[#003366]">
+                    <option>부천사업소</option>
+                    <option>서울사업소</option>
+                    <option>안양사업소</option>
+                </select>
+            </div>
+            <div class="flex-1 min-w-[200px]">
+                <label class="block text-sm font-bold text-gray-700 mb-2">실시 일자</label>
+                <input type="date" id="new-date" class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-[#003366]">
+            </div>
+            <div class="flex-1 min-w-[200px]">
+                <label class="block text-sm font-bold text-gray-700 mb-2">참여 정원</label>
+                <input type="number" id="new-capa" placeholder="예: 15" class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-[#003366]">
+            </div>
+            <div>
+                <button onclick="addSession()" class="btn-primary px-8 py-4 rounded-xl font-bold h-full flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    신규 게시
+                </button>
+            </div>
+        </div>
+
+        <h2 class="text-xl font-bold mb-4 text-gray-800">진행 중인 세션 현황</h2>
+        <div class="glass-card overflow-hidden">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-gray-50 text-gray-500 text-sm">
+                    <tr>
+                        <th class="p-5 font-semibold">사업소</th>
+                        <th class="p-5 font-semibold">일자</th>
+                        <th class="p-5 font-semibold">신청 / 정원</th>
+                        <th class="p-5 font-semibold">진행 상태</th>
+                        <th class="p-5 font-semibold text-center">관리 액션</th>
+                    </tr>
+                </thead>
+                <tbody id="session-list" class="divide-y divide-gray-100">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="result-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 fade-in">
+        <div class="glass-card p-8 w-full max-w-lg text-center bg-white">
+            <div class="w-16 h-16 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <h2 class="text-2xl font-bold mb-2">추첨 완료</h2>
+            <p id="result-desc" class="text-gray-600 mb-6 leading-relaxed">결과가 여기에 표시됩니다.</p>
+            <button onclick="closeModal()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 py-3 rounded-xl font-bold transition-colors">확인 및 닫기</button>
+        </div>
+    </div>
+
+<script>
+    // --- 1. 보안 및 설정 ---
+    const ADMIN_PW = "gspower1234";
+
+    // --- 2. 샘플 데이터 (초기 구성을 위한 더미 데이터) ---
+    let sessions = [
+        { id: 1, loc: "부천사업소", date: "2026-05-15", capa: 15, applied: 22, status: "마감" },
+        { id: 2, loc: "서울사업소", date: "2026-05-20", capa: 10, applied: 8, status: "모집중" }
+    ];
+
+    // --- 3. 로직 구현 ---
+    
+    // 로그인 처리
+    function login() {
+        const pw = document.getElementById('password-input').value;
+        if(pw === ADMIN_PW) {
+            document.body.classList.remove('items-center', 'justify-center');
+            document.body.classList.add('bg-gray-100');
+            document.getElementById('login-view').classList.add('hidden');
+            document.getElementById('dashboard-view').classList.remove('hidden');
+            document.getElementById('dashboard-view').classList.add('flex');
+            renderSessions();
+        } else {
+            document.getElementById('error-msg').classList.remove('hidden');
+        }
+    }
+
+    // 엔터키 로그인 지원
+    document.getElementById('password-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') login();
+    });
+
+    // 세션 추가
+    function addSession() {
+        const loc = document.getElementById('new-loc').value;
+        const date = document.getElementById('new-date').value;
+        const capa = parseInt(document.getElementById('new-capa').value);
+
+        if(!date || !capa) { alert("일자와 정원을 정확히 입력해주세요."); return; }
+
+        sessions.unshift({ id: Date.now(), loc, date, capa, applied: 0, status: "모집중" });
+        renderSessions();
+        
+        // 입력 폼 초기화
+        document.getElementById('new-date').value = '';
+        document.getElementById('new-capa').value = '';
+    }
+
+    // 리스트 렌더링
+    function renderSessions() {
+        const tbody = document.getElementById('session-list');
+        tbody.innerHTML = '';
+
+        sessions.forEach(s => {
+            const isFull = s.applied >= s.capa;
+            const statusColor = s.status === "마감" ? "bg-red-100 text-red-600" : (isFull ? "bg-orange-100 text-[#FF6600]" : "bg-green-100 text-green-600");
+            
+            let actionBtn = s.status === "완료" 
+                ? `<span class="text-gray-400 text-sm font-bold">결과 확정</span>` 
+                : `<button onclick="executeLottery(${s.id})" class="btn-accent px-4 py-2 rounded-lg text-sm font-bold shadow-sm">자동 추첨</button>`;
+
+            const row = `
+                <tr class="hover:bg-gray-50 transition-colors">
+                    <td class="p-5 font-bold text-gray-800">${s.loc}</td>
+                    <td class="p-5 text-gray-600">${s.date}</td>
+                    <td class="p-5">
+                        <span class="font-bold ${isFull ? 'text-[#FF6600]' : 'text-[#003366]'}">${s.applied}</span> 
+                        <span class="text-gray-400 text-sm">/ ${s.capa} 명</span>
+                    </td>
+                    <td class="p-5">
+                        <span class="px-3 py-1 rounded-full text-xs font-bold ${statusColor}">${s.status}</span>
+                    </td>
+                    <td class="p-5 text-center">${actionBtn}</td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
+    }
+
+    // 핵심 로직: 직전 참여자 제외 및 추첨
+    function executeLottery(id) {
+        const session = sessions.find(s => s.id === id);
+        
+        if(session.applied === 0) {
+            alert("신청자가 없습니다."); return;
+        }
+
+        // 가상의 신청자 데이터 생성 (실제 배포시 DB 연동 부분)
+        // 로직 시연을 위해 직전 참여자(hasPenalty)를 랜덤하게 부여
+        let applicants = Array.from({length: session.applied}, (_, i) => ({
+            userId: `EMP-${Math.floor(Math.random()*10000)}`,
+            hasPenalty: Math.random() < 0.3 // 약 30% 확률로 직전 참여자라고 가정
+        }));
+
+        let textResult = "";
+
+        if(session.applied <= session.capa) {
+            textResult = `정원 미달로 <b>신청자 ${session.applied}명 전원</b>이 선정되었습니다.`;
+        } else {
+            // 1. 그룹 분리
+            const newApplicants = applicants.filter(a => !a.hasPenalty);
+            const penaltyApplicants = applicants.filter(a => a.hasPenalty);
+            
+            let selected = [];
+            
+            // 2. 신규 인원이 정원보다 많은 경우 -> 신규 인원에서만 100% 추첨
+            if(newApplicants.length >= session.capa) {
+                selected = newApplicants.sort(() => 0.5 - Math.random()).slice(0, session.capa);
+                textResult = `정원 초과로 추첨을 진행했습니다.<br><br>
+                              총 신청: ${session.applied}명<br>
+                              직전 참여 제외: ${penaltyApplicants.length}명<br>
+                              <b>신규 신청자 ${newApplicants.length}명 중 ${session.capa}명을 무작위 선정했습니다.</b>`;
+            } 
+            // 3. 신규 인원이 정원보다 적은 경우 -> 신규 전원 합격 + 직전 참여자 중 남은 자리 추첨
+            else {
+                const needMore = session.capa - newApplicants.length;
+                const additionalSelected = penaltyApplicants.sort(() => 0.5 - Math.random()).slice(0, needMore);
+                
+                textResult = `정원 초과로 추첨을 진행했습니다.<br><br>
+                              총 신청: ${session.applied}명<br>
+                              직전 참여자: ${penaltyApplicants.length}명<br>
+                              <b>신규 신청자 ${newApplicants.length}명 전원 우선 선정 후, <br>
+                              직전 참여자 중 ${needMore}명을 추가 무작위 선정했습니다.</b>`;
+            }
+        }
+
+        // 상태 업데이트
+        session.status = "완료";
+        renderSessions();
+
+        // 결과 모달 표시
+        document.getElementById('result-desc').innerHTML = textResult;
+        document.getElementById('result-modal').classList.remove('hidden');
+        document.getElementById('result-modal').classList.add('flex');
+    }
+
+    function closeModal() {
+        document.getElementById('result-modal').classList.add('hidden');
+        document.getElementById('result-modal').classList.remove('flex');
+    }
+</script>
+</body>
+</html>
