@@ -202,3 +202,24 @@
         let resultMsg = `<b>대상 사업소:</b> ${s.loc} (${s.date})<br><br>`;
         resultMsg += `<b>총 신청:</b> ${s.applied}명 (정원 ${s.capa}명)<br>`;
         resultMsg += `<b>직전 참여 제외:</b> <span class="text-orange-500 font-bold">${penaltyCount}명</span><br>`;
+        resultMsg += `<b>1순위 신청자:</b> <span class="text-blue-600 font-bold">${newCount}명</span><br><br>`;
+        
+        if(newCount >= s.capa) {
+            resultMsg += `공정한 알고리즘에 따라 <b>1순위 대상자 중 무작위로 ${s.capa}명</b>을 선정 완료했습니다.`;
+        } else {
+            resultMsg += `1순위 신청자 전원을 선발한 후, 부족한 인원만큼 <b>직전 참여자 중 추가 추첨</b>을 진행하여 인원을 채웠습니다.`;
+        }
+
+        document.getElementById('lottery-result-content').innerHTML = resultMsg;
+        document.getElementById('lottery-modal').style.display = 'flex';
+        s.status = "완료";
+        renderAdminSessions();
+    }
+
+    function closeModal() { document.getElementById('lottery-modal').style.display = 'none'; }
+
+    // 초기 화면 로드
+    renderUserSessions();
+</script>
+</body>
+</html>
