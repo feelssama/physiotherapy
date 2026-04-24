@@ -3,262 +3,294 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GS파워 | 테라피 관리 시스템</title>
-    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
-    <link href="[https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css](https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css)" rel="stylesheet">
+    <title>GS파워 | 테라피 관리 시스템 (Enterprise v2)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
     <style>
         :root {
-            --gs-blue: #003366;
-            --gs-orange: #FF6600;
+            --gs-blue: #003366; --gs-orange: #FF6600;
         }
         body {
             font-family: 'Pretendard', sans-serif;
-            background-color: #F5F5F7; /* Apple-like light gray */
-            color: #1D1D1F;
+            background-color: #F8F9FB; color: #1D1D1F;
         }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
         }
-        .btn-primary {
-            background-color: var(--gs-blue);
-            color: white;
+        .btn-premium-primary {
+            background: linear-gradient(135deg, #003366 0%, #002244 100%); color: white;
+            transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0, 51, 102, 0.2);
+        }
+        .btn-premium-primary:hover {
+            transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0, 51, 102, 0.3);
+        }
+        .btn-premium-accent {
+            background: linear-gradient(135deg, #FF6600 0%, #E65C00 100%); color: white;
+            transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(255, 102, 0, 0.2);
+        }
+        .btn-premium-accent:hover {
+            transform: translateY(-2px); box-shadow: 0 6px 16px rgba(255, 102, 0, 0.3);
+        }
+        .status-badge {
+            font-size: 0.7rem; font-weight: 800; text-transform: uppercase;
+            padding: 4px 12px; border-radius: 20px;
+        }
+        /* 정원 초과 시 Pulse 효과 */
+        .badge-overflow {
+            background-color: #FFEEE6; color: var(--gs-orange);
+            animation: pulse-orange 2s infinite;
+        }
+        @keyframes pulse-orange {
+            0% { box-shadow: 0 0 0 0 rgba(255, 102, 0, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 102, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 102, 0, 0); }
+        }
+        .session-card {
+            border: 1px solid #EDEDF0; background: white; border-radius: 20px;
             transition: all 0.3s ease;
         }
-        .btn-primary:hover {
-            background-color: #002244;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 51, 102, 0.3);
+        .session-card:hover {
+            transform: translateY(-4px); box-shadow: 0 10px 24px rgba(0, 0, 0, 0.03);
+            border-color: rgba(0, 51, 102, 0.1);
         }
-        .btn-accent {
-            background-color: var(--gs-orange);
-            color: white;
-            transition: all 0.3s ease;
-        }
-        .btn-accent:hover {
-            background-color: #E65C00;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 102, 0, 0.3);
-        }
-        .fade-in { animation: fadeIn 0.5s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body class="antialiased min-h-screen flex flex-col items-center justify-center">
+<body class="antialiased min-h-screen flex flex-col">
 
-    <div id="login-view" class="w-full max-w-sm fade-in">
-        <div class="glass-card p-10 flex flex-col items-center text-center">
-            <div class="w-16 h-16 bg-[#003366] text-white rounded-2xl flex items-center justify-center text-2xl font-black mb-6 shadow-lg">GS</div>
-            <h1 class="text-2xl font-bold mb-2">관리자 인증</h1>
-            <p class="text-sm text-gray-500 mb-8">근골격계 테라피 프로그램 관리 시스템</p>
+    <div id="login-view" class="w-full h-screen flex items-center justify-center fade-in bg-[#003366]">
+        <div class="glass-panel p-12 w-full max-w-lg text-center shadow-2xl">
+            <div class="flex items-center justify-center gap-2 mb-8">
+                <span class="text-3xl font-black text-[#003366]">GS</span>
+                <span class="text-3xl font-black text-[#FF6600]">POWER</span>
+            </div>
+            <h1 class="text-3xl font-bold mb-3 tracking-tighter">관리자 인증</h1>
+            <p class="text-base text-gray-500 mb-10 leading-relaxed">근골격계 테라피 프로그램 관리 시스템에 접속합니다.</p>
             
             <input type="password" id="password-input" placeholder="비밀번호 입력" 
-                   class="w-full px-5 py-4 bg-gray-100 border-none rounded-xl focus:ring-2 focus:ring-[#FF6600] outline-none transition-all mb-4 text-center tracking-widest">
+                   class="w-full text-center tracking-widest text-lg p-5 bg-gray-100 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-[#FF6600] focus:border-[#FF6600] outline-none transition-all mb-5">
             
-            <button onclick="login()" class="w-full btn-primary py-4 rounded-xl font-bold text-lg">시스템 접속</button>
-            <p id="error-msg" class="text-red-500 text-sm mt-4 hidden">비밀번호가 일치하지 않습니다.</p>
+            <button onclick="login()" class="w-full btn-premium-primary p-5 rounded-2xl font-bold text-xl">접속하기</button>
+            <p id="error-msg" class="text-red-500 text-sm mt-5 hidden font-medium">비밀번호가 일치하지 않습니다.</p>
         </div>
     </div>
 
-    <div id="dashboard-view" class="hidden w-full max-w-6xl p-6 fade-in min-h-screen flex flex-col">
+    <div id="dashboard-view" class="hidden flex-1 p-8 lg:p-12 fade-in">
         
-        <header class="flex justify-between items-center mb-10 py-4 border-b border-gray-200">
-            <div class="flex items-center gap-4">
-                <span class="text-2xl font-black text-[#003366] tracking-tighter">GS POWER</span>
-                <span class="text-gray-300 text-2xl">|</span>
-                <span class="text-xl font-semibold text-gray-700">테라피 프로그램 관리</span>
+        <header class="flex justify-between items-center mb-16 pb-6 border-b border-gray-100">
+            <div class="flex items-center gap-5">
+                <div class="flex items-baseline gap-1">
+                    <span class="text-3xl font-black text-[#003366] tracking-tighter">GS POWER</span>
+                    <span class="text-xs text-[#FF6600] font-black">ADMIN v2.1</span>
+                </div>
+                <span class="text-gray-300 text-3xl font-light">|</span>
+                <span class="text-xl font-semibold text-gray-700">근골격계 테라피 프로그램</span>
             </div>
-            <button onclick="location.reload()" class="text-sm font-medium text-gray-500 hover:text-[#FF6600] transition-colors">로그아웃</button>
+            <div class="flex items-center gap-4">
+                <div class="text-right">
+                    <p class="font-bold text-gray-800">이주필 팀장</p>
+                    <p class="text-xs text-gray-400">안전보건팀</p>
+                </div>
+                <button onclick="location.reload()" class="text-sm font-medium text-gray-400 hover:text-red-500 transition-colors">로그아웃</button>
+            </div>
         </header>
 
-        <div class="glass-card p-8 mb-8 flex flex-wrap gap-4 items-end justify-between">
-            <div class="flex-1 min-w-[200px]">
-                <label class="block text-sm font-bold text-gray-700 mb-2">사업소 선택</label>
-                <select id="new-loc" class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-[#003366]">
-                    <option>부천사업소</option>
-                    <option>서울사업소</option>
-                    <option>안양사업소</option>
-                </select>
-            </div>
-            <div class="flex-1 min-w-[200px]">
-                <label class="block text-sm font-bold text-gray-700 mb-2">실시 일자</label>
-                <input type="date" id="new-date" class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-[#003366]">
-            </div>
-            <div class="flex-1 min-w-[200px]">
-                <label class="block text-sm font-bold text-gray-700 mb-2">참여 정원</label>
-                <input type="number" id="new-capa" placeholder="예: 15" class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-[#003366]">
-            </div>
-            <div>
-                <button onclick="addSession()" class="btn-primary px-8 py-4 rounded-xl font-bold h-full flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                    신규 게시
-                </button>
+        <div class="glass-panel p-10 mb-12">
+            <h2 class="text-2xl font-extrabold mb-8 flex items-center gap-3">
+                <span class="w-2.5 h-8 bg-[#FF6600] rounded-full"></span> 신규 프로그램 등록
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
+                <div class="flex-1">
+                    <label class="block text-sm font-bold text-gray-600 mb-2.5">사업소</label>
+                    <select id="new-loc" class="w-full p-4.5 bg-white border border-gray-200 rounded-2xl outline-none focus:ring-2 focus:ring-[#003366]">
+                        <option>부천사업소</option>
+                        <option>서울사업소</option>
+                        <option>안양사업소</option>
+                    </select>
+                </div>
+                <div class="flex-1">
+                    <label class="block text-sm font-bold text-gray-600 mb-2.5">실시 일자</label>
+                    <input type="date" id="new-date" class="w-full p-4.5 bg-white border border-gray-200 rounded-2xl outline-none focus:ring-2 focus:ring-[#003366]">
+                </div>
+                <div class="flex-1">
+                    <label class="block text-sm font-bold text-gray-600 mb-2.5">참여 정원 (명)</label>
+                    <input type="number" id="new-capa" placeholder="예: 15" class="w-full p-4.5 bg-white border border-gray-200 rounded-2xl outline-none focus:ring-2 focus:ring-[#003366]">
+                </div>
+                <div>
+                    <button onclick="addSession()" class="w-full btn-premium-primary p-4.5 rounded-2xl font-bold flex items-center justify-center gap-2.5">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+                        세션 게시
+                    </button>
+                </div>
             </div>
         </div>
 
-        <h2 class="text-xl font-bold mb-4 text-gray-800">진행 중인 세션 현황</h2>
-        <div class="glass-card overflow-hidden">
-            <table class="w-full text-left border-collapse">
-                <thead class="bg-gray-50 text-gray-500 text-sm">
-                    <tr>
-                        <th class="p-5 font-semibold">사업소</th>
-                        <th class="p-5 font-semibold">일자</th>
-                        <th class="p-5 font-semibold">신청 / 정원</th>
-                        <th class="p-5 font-semibold">진행 상태</th>
-                        <th class="p-5 font-semibold text-center">관리 액션</th>
-                    </tr>
-                </thead>
-                <tbody id="session-list" class="divide-y divide-gray-100">
-                    </tbody>
-            </table>
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-extrabold text-gray-800">프로그램 운영 현황</h2>
+            <div id="stats-summary" class="flex gap-3 text-sm text-gray-500 font-medium bg-white p-3 px-5 rounded-full border">
+                </div>
         </div>
+        
+        <div id="session-card-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            </div>
     </div>
 
-    <div id="result-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 fade-in">
-        <div class="glass-card p-8 w-full max-w-lg text-center bg-white">
-            <div class="w-16 h-16 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+    <div id="result-modal" class="fixed inset-0 bg-black bg-opacity-70 hidden items-center justify-center z-50 fade-in p-6">
+        <div class="glass-panel p-10 w-full max-w-2xl text-center bg-white shadow-2xl">
+            <div class="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
             </div>
-            <h2 class="text-2xl font-bold mb-2">추첨 완료</h2>
-            <p id="result-desc" class="text-gray-600 mb-6 leading-relaxed">결과가 여기에 표시됩니다.</p>
-            <button onclick="closeModal()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 py-3 rounded-xl font-bold transition-colors">확인 및 닫기</button>
+            <h2 class="text-3xl font-extrabold mb-3 tracking-tighter">자동 추첨 완료</h2>
+            <p id="result-loc" class="text-xl font-bold text-[#003366] mb-8">안양사업소 (2026.05.20)</p>
+            
+            <div id="result-desc" class="text-gray-700 mb-10 leading-relaxed text-left bg-gray-50 p-6 rounded-2xl border">
+                결과 프로세스가 여기에 표시됩니다.
+            </div>
+            
+            <button onclick="closeModal()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 p-4.5 rounded-2xl font-bold text-lg transition-colors">결과 확인 및 닫기</button>
         </div>
     </div>
 
 <script>
-    // --- 1. 보안 및 설정 ---
+    // --- 설정 및 보안 ---
     const ADMIN_PW = "gspower1234";
 
-    // --- 2. 샘플 데이터 (초기 구성을 위한 더미 데이터) ---
+    // --- 샘플 데이터 ---
     let sessions = [
-        { id: 1, loc: "부천사업소", date: "2026-05-15", capa: 15, applied: 22, status: "마감" },
-        { id: 2, loc: "서울사업소", date: "2026-05-20", capa: 10, applied: 8, status: "모집중" }
+        { id: 1, loc: "안양사업소", date: "2026-05-20", capa: 20, applied: 25, status: "추첨 대기" },
+        { id: 2, loc: "부천사업소", date: "2026-05-15", capa: 15, applied: 14, status: "모집중" },
+        { id: 3, loc: "서울사업소", date: "2026-05-25", capa: 10, applied: 5, status: "모집중" }
     ];
 
-    // --- 3. 로직 구현 ---
-    
-    // 로그인 처리
+    // --- 로직 구현 ---
     function login() {
         const pw = document.getElementById('password-input').value;
         if(pw === ADMIN_PW) {
-            document.body.classList.remove('items-center', 'justify-center');
-            document.body.classList.add('bg-gray-100');
             document.getElementById('login-view').classList.add('hidden');
             document.getElementById('dashboard-view').classList.remove('hidden');
-            document.getElementById('dashboard-view').classList.add('flex');
             renderSessions();
         } else {
             document.getElementById('error-msg').classList.remove('hidden');
         }
     }
 
-    // 엔터키 로그인 지원
-    document.getElementById('password-input').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') login();
-    });
+    document.getElementById('password-input').addEventListener('keypress', e => e.key === 'Enter' && login());
 
-    // 세션 추가
     function addSession() {
         const loc = document.getElementById('new-loc').value;
         const date = document.getElementById('new-date').value;
         const capa = parseInt(document.getElementById('new-capa').value);
-
-        if(!date || !capa) { alert("일자와 정원을 정확히 입력해주세요."); return; }
-
+        if(!date || !capa) { alert("일자와 정원을 입력해주세요."); return; }
         sessions.unshift({ id: Date.now(), loc, date, capa, applied: 0, status: "모집중" });
         renderSessions();
-        
-        // 입력 폼 초기화
-        document.getElementById('new-date').value = '';
-        document.getElementById('new-capa').value = '';
     }
 
-    // 리스트 렌더링
+    // 카드 기반 렌더링
     function renderSessions() {
-        const tbody = document.getElementById('session-list');
-        tbody.innerHTML = '';
+        const container = document.getElementById('session-card-list');
+        const statsSummary = document.getElementById('stats-summary');
+        container.innerHTML = '';
+
+        let totalApplied = 0;
+        let pendingLottery = 0;
 
         sessions.forEach(s => {
-            const isFull = s.applied >= s.capa;
-            const statusColor = s.status === "마감" ? "bg-red-100 text-red-600" : (isFull ? "bg-orange-100 text-[#FF6600]" : "bg-green-100 text-green-600");
+            totalApplied += s.applied;
+            const isOverflow = s.applied > s.capa;
+            const progress = s.capa === 0 ? 0 : Math.min(100, (s.applied / s.capa) * 100);
             
-            let actionBtn = s.status === "완료" 
-                ? `<span class="text-gray-400 text-sm font-bold">결과 확정</span>` 
-                : `<button onclick="executeLottery(${s.id})" class="btn-accent px-4 py-2 rounded-lg text-sm font-bold shadow-sm">자동 추첨</button>`;
+            if(s.status === "추첨 대기") pendingLottery++;
 
-            const row = `
-                <tr class="hover:bg-gray-50 transition-colors">
-                    <td class="p-5 font-bold text-gray-800">${s.loc}</td>
-                    <td class="p-5 text-gray-600">${s.date}</td>
-                    <td class="p-5">
-                        <span class="font-bold ${isFull ? 'text-[#FF6600]' : 'text-[#003366]'}">${s.applied}</span> 
-                        <span class="text-gray-400 text-sm">/ ${s.capa} 명</span>
-                    </td>
-                    <td class="p-5">
-                        <span class="px-3 py-1 rounded-full text-xs font-bold ${statusColor}">${s.status}</span>
-                    </td>
-                    <td class="p-5 text-center">${actionBtn}</td>
-                </tr>
+            let badgeClass = s.status === "완료" ? "bg-gray-100 text-gray-500" : "bg-green-100 text-green-600";
+            if(isOverflow) badgeClass = "badge-overflow status-badge shadow-sm";
+
+            let actionBtn = "";
+            if (s.status === "완료") { actionBtn = `<span class="text-sm font-semibold text-gray-400 p-3 block text-center">추첨 완료</span>`; }
+            else if(isOverflow || s.status === "추첨 대기") { actionBtn = `<button onclick="executeLottery(${s.id})" class="w-full btn-premium-accent p-3.5 rounded-xl text-md font-bold">자동 추첨</button>`; }
+            else { actionBtn = `<button class="w-full btn-premium-primary p-3.5 rounded-xl text-md font-bold opacity-70">모집 중</button>`; }
+
+            const card = `
+                <div class="session-card p-7 fade-in flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-6">
+                            <div>
+                                <h3 class="text-xl font-extrabold text-gray-800 tracking-tight">${s.loc}</h3>
+                                <p class="text-sm text-gray-400 font-medium mt-1">${s.date}</p>
+                            </div>
+                            <span class="status-badge ${badgeClass}">${isOverflow ? '정원 초과' : s.status}</span>
+                        </div>
+
+                        <div class="mb-6">
+                            <div class="flex justify-between items-end mb-2.5">
+                                <span class="text-sm font-bold text-gray-500">신청 현황</span>
+                                <div>
+                                    <span class="text-2xl font-extrabold ${isOverflow ? 'text-[#FF6600]' : 'text-[#003366]'}">${s.applied}</span>
+                                    <span class="text-base text-gray-300 font-medium"> / ${s.capa} 명</span>
+                                </div>
+                            </div>
+                            <div class="w-full bg-gray-100 rounded-full h-2.5 border">
+                                <div class="${isOverflow ? 'bg-[#FF6600]' : 'bg-[#003366]'} h-2.5 rounded-full" style="width: ${progress}%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 border-t pt-5">
+                        ${actionBtn}
+                    </div>
+                </div>
             `;
-            tbody.innerHTML += row;
+            container.innerHTML += card;
         });
+
+        // 요약 정보 업데이트
+        statsSummary.innerHTML = `<span>총 신청: ${totalApplied}명</span> <span>|</span> <span>추첨 대기: ${pendingLottery}건</span>`;
     }
 
-    // 핵심 로직: 직전 참여자 제외 및 추첨
+    // 핵심 로직: 투명한 추첨 결과 시각화
     function executeLottery(id) {
         const session = sessions.find(s => s.id === id);
-        
-        if(session.applied === 0) {
-            alert("신청자가 없습니다."); return;
-        }
+        if(session.applied === 0) return alert("신청자가 없습니다.");
 
-        // 가상의 신청자 데이터 생성 (실제 배포시 DB 연동 부분)
-        // 로직 시연을 위해 직전 참여자(hasPenalty)를 랜덤하게 부여
+        // 가상의 신청자 데이터 생성 (로직 시연)
         let applicants = Array.from({length: session.applied}, (_, i) => ({
-            userId: `EMP-${Math.floor(Math.random()*10000)}`,
-            hasPenalty: Math.random() < 0.3 // 약 30% 확률로 직전 참여자라고 가정
+            userId: `GS-${Math.floor(Math.random()*9000)+1000}`,
+            hasPenalty: Math.random() < 0.3 // 30% 확률로 직전 참여자 가정
         }));
 
+        const locDesc = `${session.loc} (${session.date})`;
+        document.getElementById('result-loc').innerText = locDesc;
+
+        const newApplicants = applicants.filter(a => !a.hasPenalty);
+        const penaltyApplicants = applicants.filter(a => a.hasPenalty);
+        let selected = [];
         let textResult = "";
 
         if(session.applied <= session.capa) {
-            textResult = `정원 미달로 <b>신청자 ${session.applied}명 전원</b>이 선정되었습니다.`;
+            textResult = `<b class="text-[#003366]">정원 미달입니다.</b><br>신청자 전원(${session.applied}명)이 테라피 대상으로 선정되었습니다.`;
         } else {
-            // 1. 그룹 분리
-            const newApplicants = applicants.filter(a => !a.hasPenalty);
-            const penaltyApplicants = applicants.filter(a => a.hasPenalty);
-            
-            let selected = [];
-            
-            // 2. 신규 인원이 정원보다 많은 경우 -> 신규 인원에서만 100% 추첨
+            // 정원 초과 시
+            textResult = `<div class="mb-4">총 신청: <b>${session.applied}명</b> (정원 ${session.capa}명, <span class="text-[#FF6600]">초과 ${session.applied - session.capa}명</span>)</div>`;
+            textResult += `<div class="flex gap-2 mb-6">
+                             <div class="bg-gray-100 p-4 rounded-xl flex-1 border">👥 직전 참여 제외: <b class="text-gray-700">${penaltyApplicants.length}명</b></div>
+                             <div class="bg-green-100 text-green-800 p-4 rounded-xl flex-1 border">✅ 1차 추첨 대상: <b class="text-green-700">${newApplicants.length}명</b></div>
+                           </div>`;
+
             if(newApplicants.length >= session.capa) {
+                // 1순위 대상이 정원보다 많은 경우
                 selected = newApplicants.sort(() => 0.5 - Math.random()).slice(0, session.capa);
-                textResult = `정원 초과로 추첨을 진행했습니다.<br><br>
-                              총 신청: ${session.applied}명<br>
-                              직전 참여 제외: ${penaltyApplicants.length}명<br>
-                              <b>신규 신청자 ${newApplicants.length}명 중 ${session.capa}명을 무작위 선정했습니다.</b>`;
-            } 
-            // 3. 신규 인원이 정원보다 적은 경우 -> 신규 전원 합격 + 직전 참여자 중 남은 자리 추첨
-            else {
+                textResult += `<b class="text-[#003366]">1차 대상자(${newApplicants.length}명) 중 <span class="text-xl font-black">${session.capa}명</span>을 최종 무작위 선정했습니다.</b>`;
+            } else {
+                // 1순위 대상이 부족한 경우
                 const needMore = session.capa - newApplicants.length;
                 const additionalSelected = penaltyApplicants.sort(() => 0.5 - Math.random()).slice(0, needMore);
-                
-                textResult = `정원 초과로 추첨을 진행했습니다.<br><br>
-                              총 신청: ${session.applied}명<br>
-                              직전 참여자: ${penaltyApplicants.length}명<br>
-                              <b>신규 신청자 ${newApplicants.length}명 전원 우선 선정 후, <br>
-                              직전 참여자 중 ${needMore}명을 추가 무작위 선정했습니다.</b>`;
+                textResult += `1차 대상자(${newApplicants.length}명) 전원 합격 후,<br>
+                               <b class="text-[#003366]">제외되었던 직전 참여자 중 ${needMore}명을 추가 무작위 선정하여 정원(${session.capa}명)을 채웠습니다.</b>`;
             }
         }
 
-        // 상태 업데이트
         session.status = "완료";
         renderSessions();
-
-        // 결과 모달 표시
         document.getElementById('result-desc').innerHTML = textResult;
         document.getElementById('result-modal').classList.remove('hidden');
         document.getElementById('result-modal').classList.add('flex');
